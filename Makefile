@@ -1,17 +1,19 @@
-NAME = intra_profiler
+NAME := intra_profiler
 
-SRC_DIR = ./src
-OBJ_DIR = ./obj
+SRC_DIR := ./src
+OBJ_DIR := ./obj
 
-SRC_FILES = index.c
+SRC_FILES := index.c
 
-SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
+SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
-OBJ_FILES = $(SRC_FILES:.c=.o)
-OBJ = $(addprefix $(OBJ_DIR)/, $(OBJ_FILES))
+OBJ_FILES := $(SRC_FILES:.c=.o)
+OBJ := $(addprefix $(OBJ_DIR)/, $(OBJ_FILES))
 
 CFLAGS = -Wall -Werror -Wextra
-CC = clang $(CFLAGS)
+CC := clang $(CFLAGS)
+
+RM := rm -rf
 
 all: $(NAME)
 
