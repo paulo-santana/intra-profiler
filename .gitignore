@@ -1,3 +1,6 @@
 *.o
 a.out
 intra_profiler
+mongoose
+.cache
+compile_commands.json
