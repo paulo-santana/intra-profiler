@@ -1,7 +1,7 @@
 #include "profiler.h"
 
 static const char *g_listening_address = "http://localhost:8000";
-static const char *token = "6bc5e315a23a393f2c742c6b6e7ee884631e3140e876355bb9ca7539863e9ffc";
+static const char *token = "MY_TOKEN";
 #define API42 "https://api.intra.42.fr"
 #define USERS "/v2/users/psergio-"
 

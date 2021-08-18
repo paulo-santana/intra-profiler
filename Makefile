@@ -14,7 +14,7 @@ OBJ_FILES := $(SRC_FILES:.c=.o)
 OBJ := $(addprefix $(OBJ_DIR)/, $(OBJ_FILES))
 
 CFLAGS := -Wall -Werror -Wextra -g3
-CFLAGS += -DMG_ENABLE_MBEDTLS=1 -I$(MBEDTLS)/include -I/usr/include
+CFLAGS += -DMG_ENABLE_MBEDTLS=1 -I$(MBEDTLS)/include
 LFLAGS = -L$(MBEDTLS)/library -lmbedtls -lmbedcrypto -lmbedx509
 CC := clang $(CFLAGS)
 
