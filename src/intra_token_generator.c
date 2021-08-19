@@ -7,7 +7,7 @@
 
 void get_token(t_api *api)
 {
-	if (api->token.str != NULL && api->token.expiration_date < time(NULL))
+	if (api->token.str != NULL && api->token.expiration_date > time(NULL))
 	{
 		printf("no need to request a token :)\n");
 		return ;
