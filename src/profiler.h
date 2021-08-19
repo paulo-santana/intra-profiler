@@ -13,7 +13,7 @@ typedef struct s_token {
 typedef struct s_api {
 	int				keep_running;
 	struct mg_mgr	mgr;
-	t_token token;
+	t_token 		token;
 } t_api;
 
 typedef struct s_response {
@@ -23,8 +23,8 @@ typedef struct s_response {
 } t_response;
 
 typedef struct s_request {
-	char *body;
-	int body_len;
+	char *content;
+	int content_len;
 	char *url;
 	t_api *api;
 	t_response *response;

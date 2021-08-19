@@ -19,7 +19,9 @@ void get_token(t_api *api)
 	char data[184];
 
 	snprintf(data, 184,
-			"grant_type=client_credentials&client_id=%s&client_secret=%s",
+			"grant_type=client_credentials&"
+			"client_id=%s&"
+			"client_secret=%s",
 			client_id, client_secret);
 	t_response *response = request_intra(api, "POST", auth_url, data);
 	dump_response(response);

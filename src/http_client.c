@@ -3,9 +3,9 @@
 #include <string.h>
 
 void connection_handler (struct mg_connection *conn, int event,
-		void *event_data, void *data)
+		void *event_data, void *fn_data)
 {
-	t_request *request = data;
+	t_request *request = fn_data;
 
 	if (event == MG_EV_CONNECT)
 	{
@@ -23,9 +23,11 @@ void connection_handler (struct mg_connection *conn, int event,
 				"Accept: */*\r\n"
 				"\r\n"
 				"%s\r\n",
-				request->method,
-				mg_url_uri(request->url), (int) host.len, host.ptr,
-				request->api->token.str, request->body_len, request->body);
+				request->method, mg_url_uri(request->url),
+				(int) host.len, host.ptr,
+				request->api->token.str,
+				request->content_len,
+				request->content);
 		printf("%.*s\n", (int)conn->send.len, conn->send.buf);
 	}
 	else if (event == MG_EV_HTTP_MSG)
@@ -55,11 +57,11 @@ t_response *request_intra(t_api *api, char *method, char *url, char *data)
 	request = calloc(1, sizeof(t_request));
 
 	request->url = url;
-	request->body= data;
-	request->body_len = strlen(data);
+	request->content= data;
+	request->content_len = strlen(data);
 	request->response = response;
-	request->api = api;
 	request->method = method;
+	request->api = api;
 
 	mg_http_connect(&api->mgr, url, connection_handler, request);
 	while (!request->finished)

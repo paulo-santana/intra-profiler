@@ -2,13 +2,30 @@
 
 static const char *g_listening_address = "http://localhost:8000";
 #define API42 "https://api.intra.42.fr"
-#define USERS "/v2/users/psergio-"
+#define USER "/v2/users/psergio-"
 
-void fetch(t_api *api, char *url, void* current_connection) {
+
+int fetch(t_api *api, char *url, void* current_connection) {
 	(void)url;
-	(void)current_connection;
+
 	get_token(api);
+
+	if (api->token.str == NULL)
+		return printf("fail to get a token\n");
+	t_response *res = request_intra(api, "GET", API42 USER, "");
+	mg_http_reply(current_connection, res->code, "Content-Type: application/json\n", "%s\n", res->body);
+	free_response(res);
+	return (0);
 }
+
+
+
+
+
+
+
+
+
 
 static void handle_request(t_api *api, struct mg_connection *conn, struct mg_http_message *msg)
 {
