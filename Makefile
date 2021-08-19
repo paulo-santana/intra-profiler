@@ -9,7 +9,8 @@ MBEDTLS = ./mbedtls
 
 SRC_FILES := index.c \
 			 http_client.c \
-			 intra_token_generator.c
+			 intra_token_generator.c \
+			 utils.c
 
 DEPS = ./dependencies/mongoose.c \
 	   ./dependencies/mjson/src/mjson.c

@@ -38,7 +38,8 @@ static void callback(struct mg_connection *conn, int ev, void *ev_data, void *ap
 void init_api(t_api *api)
 {
 	api->keep_running = 1;
-	api->token = NULL;
+	api->token.str = NULL;
+	api->token.expiration_date = 0;
 	mg_mgr_init(&api->mgr);
 	mg_http_listen(&api->mgr, g_listening_address, callback, api);
 }

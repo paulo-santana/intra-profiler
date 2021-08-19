@@ -5,10 +5,15 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 
+typedef struct s_token {
+	char *str;
+	time_t expiration_date;
+} t_token;
+
 typedef struct s_api {
 	int				keep_running;
 	struct mg_mgr	mgr;
-	char *token;
+	t_token token;
 } t_api;
 
 typedef struct s_response {

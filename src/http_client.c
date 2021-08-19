@@ -25,7 +25,7 @@ void connection_handler (struct mg_connection *conn, int event,
 				"%s\r\n",
 				request->method,
 				mg_url_uri(request->url), (int) host.len, host.ptr,
-				request->api->token, request->body_len, request->body);
+				request->api->token.str, request->body_len, request->body);
 		printf("%.*s\n", (int)conn->send.len, conn->send.buf);
 	}
 	else if (event == MG_EV_HTTP_MSG)
