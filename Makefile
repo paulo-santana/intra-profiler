@@ -1,5 +1,7 @@
 NAME := intra_profiler
 
+VALGRIND = #valgrind
+
 SRC_DIR := ./src
 OBJ_DIR := ./obj
 INCLUDE_DIR := ./includes
@@ -13,10 +15,10 @@ SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJ_FILES := $(SRC_FILES:.c=.o)
 OBJ := $(addprefix $(OBJ_DIR)/, $(OBJ_FILES))
 
-CFLAGS := -Wall -Werror -Wextra -g3
+CFLAGS := -Wall -Werror -Wextra -g3 -fsanitize=address
 CFLAGS += -DMG_ENABLE_MBEDTLS=1 -I$(MBEDTLS)/include
 LFLAGS = -L$(MBEDTLS)/library -lmbedtls -lmbedcrypto -lmbedx509
-CC := clang $(CFLAGS)
+CC := gcc $(CFLAGS)
 
 RM := rm -rf
 
@@ -32,7 +34,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -I$(INCLUDE_DIR) -c $< -o $@ 
 
 run: all
-	./intra_profiler
+	$(VALGRIND) ./intra_profiler
 
 clean:
 	$(RM) $(OBJ)
