@@ -43,6 +43,7 @@ run: all
 
 clean:
 	$(RM) $(OBJ)
+	$(RM) vgcore*
 
 fclean: clean
 	$(RM) $(NAME)
