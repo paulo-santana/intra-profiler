@@ -4,3 +4,4 @@ intra_profiler
 mongoose
 .cache
 compile_commands.json
+vgcore*
