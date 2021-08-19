@@ -7,8 +7,12 @@ OBJ_DIR := ./obj
 INCLUDE_DIR := ./includes
 MBEDTLS = ./mbedtls
 
-SRC_FILES := index.c
-DEPS = ./dependencies/mongoose.c
+SRC_FILES := index.c \
+			 http_client.c \
+			 intra_token_generator.c
+
+DEPS = ./dependencies/mongoose.c \
+	   ./dependencies/mjson/src/mjson.c
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
