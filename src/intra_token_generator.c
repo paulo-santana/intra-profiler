@@ -41,5 +41,8 @@ void get_token(t_api *api)
 		api->token.expiration_date = expires_in + created_at;
 	}
 	else
+	{
 		api->token.str = NULL;
+		api->token.expiration_date = 0;
+	}
 }

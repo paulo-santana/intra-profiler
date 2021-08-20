@@ -1,6 +1,5 @@
 #include "mongoose.h"
 #include "profiler.h"
-#include <string.h>
 
 void connection_handler (struct mg_connection *conn, int event,
 		void *event_data, void *fn_data)
@@ -28,7 +27,6 @@ void connection_handler (struct mg_connection *conn, int event,
 				request->api->token.str,
 				request->content_len,
 				request->content);
-		printf("%.*s\n", (int)conn->send.len, conn->send.buf);
 	}
 	else if (event == MG_EV_HTTP_MSG)
 	{
@@ -65,7 +63,7 @@ t_response *request_intra(t_api *api, char *method, char *url, char *data)
 
 	mg_http_connect(&api->mgr, url, connection_handler, request);
 	while (!request->finished)
-		mg_mgr_poll(&api->mgr, 1000);
+		mg_mgr_poll(&api->mgr, 100);
 	free_request(request);
 	return response;
 }
