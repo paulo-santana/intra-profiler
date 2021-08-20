@@ -5,8 +5,8 @@ VALGRIND = #valgrind
 SRC_DIR := ./src
 OBJ_DIR := ./obj
 INCLUDE_DIR := ./includes
-MBEDTLS = ./mbedtls
 DEPS_DIR = ./dependencies
+MBEDTLS = $(DEPS_DIR)/mbedtls
 
 SRC_FILES := index.c \
 			 http_client.c \
