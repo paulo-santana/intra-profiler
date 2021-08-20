@@ -1,39 +1,46 @@
 #include "mongoose.h"
 #include "profiler.h"
 
+void send_request(struct mg_connection *conn, t_request *request)
+{
+	struct mg_str host = mg_url_host(request->url);
+	if (mg_url_is_ssl(request->url))
+	{
+		struct mg_tls_opts opts = { .srvname = host };
+		mg_tls_init(conn, &opts);
+	}
+	mg_printf(conn,
+			"%s %s HTTP/1.0\r\n"
+			"Host: %.*s\r\n"
+			"Authorization: Bearer %s\r\n"
+			"Content-Length: %d\r\n"
+			"Accept: */*\r\n"
+			"\r\n"
+			"%s\r\n",
+			request->method, mg_url_uri(request->url),
+			(int) host.len, host.ptr,
+			request->api->token.str,
+			request->content_len,
+			request->content);
+}
+
+void get_response(struct mg_http_message *msg, t_response *response)
+{
+	response->body = strndup(msg->body.ptr, msg->body.len);
+	response->body_len = msg->body.len;
+	response->code = atoi(msg->uri.ptr);
+}
+
 void connection_handler (struct mg_connection *conn, int event,
 		void *event_data, void *fn_data)
 {
 	t_request *request = fn_data;
 
 	if (event == MG_EV_CONNECT)
-	{
-		struct mg_str host = mg_url_host(request->url);
-		if (mg_url_is_ssl(request->url))
-		{
-			struct mg_tls_opts opts = { .srvname = host };
-			mg_tls_init(conn, &opts);
-		}
-		mg_printf(conn,
-				"%s %s HTTP/1.0\r\n"
-				"Host: %.*s\r\n"
-				"Authorization: Bearer %s\r\n"
-				"Content-Length: %d\r\n"
-				"Accept: */*\r\n"
-				"\r\n"
-				"%s\r\n",
-				request->method, mg_url_uri(request->url),
-				(int) host.len, host.ptr,
-				request->api->token.str,
-				request->content_len,
-				request->content);
-	}
+		send_request(conn, request);
 	else if (event == MG_EV_HTTP_MSG)
 	{
-		struct mg_http_message *msg = event_data;
-		request->response->body = strndup(msg->body.ptr, msg->body.len);
-		request->response->body_len = msg->body.len;
-		request->response->code = atoi(msg->uri.ptr);
+		get_response(event_data, request->response);
 		request->finished = 1;
 	}
 	else
