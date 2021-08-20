@@ -5,27 +5,25 @@ static const char *g_listening_address = "http://localhost:8000";
 #define USER "/v2/users/psergio-"
 
 
-int fetch(t_api *api, char *url, void* current_connection) {
+void fetch(t_api *api, char *url, void* current_connection) {
 	(void)url;
 
 	get_token(api);
 
 	if (api->token.str == NULL)
-		return printf("fail to get a token\n");
+	{
+		mg_http_reply(current_connection, 500,
+				"Content-Type: application/json\r\n",
+				"{\"error\":\"Failed to get a token\"}"
+				"\r\n");
+		printf("fail to get a token\n");
+		return ;
+	}
 	t_response *res = request_intra(api, "GET", API42 USER, "");
-	mg_http_reply(current_connection, res->code, "Content-Type: application/json\n", "%s\n", res->body);
+	mg_http_reply(current_connection, res->code,
+			"Content-Type: application/json\r\n", "%s\r\n", res->body);
 	free_response(res);
-	return (0);
 }
-
-
-
-
-
-
-
-
-
 
 static void handle_request(t_api *api, struct mg_connection *conn, struct mg_http_message *msg)
 {
