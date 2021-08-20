@@ -47,7 +47,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -I$(INCLUDE_DIR) -c $< -o $@ 
 
 $(MBEDTLS):
-	make -C $(MBEDTLS_DIR)
+	make -C $(MBEDTLS_DIR) no_test
 
 run: all
 	$(VALGRIND) ./intra_profiler
