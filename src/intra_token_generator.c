@@ -27,7 +27,7 @@ void get_token(t_api *api)
 	dump_response(response);
 	if (response->code == 200)
 	{
-		double expires_in, created_at;
+		double expires_in;
 		char *token = malloc(TOKEN_LEN + 1);
 		int result = mjson_get_string(response->body, response->body_len,
 				"$.access_token", token, TOKEN_LEN + 1);
@@ -36,9 +36,7 @@ void get_token(t_api *api)
 		api->token.str = token;
 		mjson_get_number(response->body, response->body_len,
 				"$.expires_in", &expires_in);
-		mjson_get_number(response->body, response->body_len,
-				"$.created_at", &created_at);
-		api->token.expiration_date = expires_in + created_at;
+		api->token.expiration_date = time(NULL) + expires_in;
 	}
 	else
 	{
