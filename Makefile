@@ -6,7 +6,8 @@ SRC_DIR := ./src
 OBJ_DIR := ./obj
 INCLUDE_DIR := ./includes
 DEPS_DIR = ./dependencies
-MBEDTLS = $(DEPS_DIR)/mbedtls
+MBEDTLS_DIR = $(DEPS_DIR)/mbedtls
+MBEDTLS = $(MBEDTLS_DIR)/library/libmbedtls.a
 
 SRC_FILES := index.c \
 			 http_client.c \
@@ -25,15 +26,15 @@ OBJ_FILES := $(SRC_FILES:.c=.o)
 OBJ := $(addprefix $(OBJ_DIR)/, $(OBJ_FILES))
 
 CFLAGS := -Wall -Werror -Wextra -g3 -fsanitize=address
-CFLAGS += -DMG_ENABLE_MBEDTLS=1 -I$(MBEDTLS)/include
-LFLAGS = -L$(MBEDTLS)/library -lmbedtls -lmbedcrypto -lmbedx509
+CFLAGS += -DMG_ENABLE_MBEDTLS=1 -I$(MBEDTLS_DIR)/include
+LFLAGS = -L$(MBEDTLS_DIR)/library -lmbedtls -lmbedcrypto -lmbedx509
 CC := gcc $(CFLAGS)
 
 RM := rm -rf
 
 all: $(NAME)
 
-$(NAME): $(OBJ_DIR) $(DEPS_OBJ) $(OBJ)
+$(NAME): $(MBEDTLS) $(OBJ_DIR) $(DEPS_OBJ) $(OBJ)
 	$(CC) $(OBJ) $(DEPS_OBJ) -o $(NAME) $(LFLAGS)
 
 $(OBJ_DIR):
@@ -44,6 +45,9 @@ $(OBJ_DIR)/%.o: $(DEPS_DIR)/%.c
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -I$(INCLUDE_DIR) -c $< -o $@ 
+
+$(MBEDTLS):
+	make -C $(MBEDTLS_DIR)
 
 run: all
 	$(VALGRIND) ./intra_profiler
