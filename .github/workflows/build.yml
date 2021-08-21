@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: checkout
-      run: git submodule update --init
+    - name: install dependencies
+      run: sudo apt-get install -y libmbedtls-dev
     - name: make
       run: make
