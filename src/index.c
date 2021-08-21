@@ -1,11 +1,10 @@
 #include "profiler.h"
 
-static const char *g_listening_address = "http://localhost:8000";
+static const char *g_listening_address = "http://0.0.0.0:8000";
 #define API42 "https://api.intra.42.fr"
 
-void fetch(t_api *api, char *url, void* current_connection) {
-	(void)url;
-
+void fetch(t_api *api, char *url, void* current_connection)
+{
 	get_token(api);
 
 	if (api->token.str == NULL)
@@ -44,6 +43,8 @@ static void handle_request(t_api *api, struct mg_connection *conn, struct mg_htt
 
 static void callback(struct mg_connection *conn, int ev, void *ev_data, void *api)
 {
+	if (ev == MG_EV_ERROR)
+		return mg_http_reply(conn, 500, "", "");
 	if (ev != MG_EV_HTTP_MSG)
 		return ;
 

@@ -5,10 +5,10 @@ VALGRIND = #valgrind
 SRC_DIR := ./src
 OBJ_DIR := ./obj
 DEPS_DIR = ./dependencies
-MBEDTLS_DIR = $(DEPS_DIR)/mbedtls
+MBEDTLS_DIR = /usr/local
 
-INCLUDE_DIR := ./includes -I$(MBEDTLS_DIR)/include
-MBEDTLS = $(MBEDTLS_DIR)/library/libmbedtls.a
+INCLUDE_DIR := ./includes #-I$(MBEDTLS_DIR)/include
+MBEDTLS = $(MBEDTLS_DIR)/lib/libmbedtls.a
 
 SRC_FILES := index.c \
 			 http_client.c \
@@ -35,7 +35,7 @@ RM := rm -rf
 
 all: $(NAME)
 
-$(NAME): $(MBEDTLS) $(OBJ_DIR) $(DEPS_OBJ) $(OBJ)
+$(NAME): $(OBJ_DIR) $(DEPS_OBJ) $(OBJ)
 	$(CC) $(OBJ) $(DEPS_OBJ) -o $(NAME) $(LFLAGS)
 
 $(OBJ_DIR):
@@ -47,14 +47,14 @@ $(OBJ_DIR)/%.o: $(DEPS_DIR)/%.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -I$(INCLUDE_DIR) -c $< -o $@ 
 
-$(MBEDTLS):
-	make -C $(MBEDTLS_DIR) no_test
+#$(MBEDTLS):
+#	make -C $(MBEDTLS_DIR) no_test
 
 run: all
 	$(VALGRIND) ./intra_profiler
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(OBJ) $(DEPS_OBJ)
 	$(RM) vgcore*
 
 fclean: clean
