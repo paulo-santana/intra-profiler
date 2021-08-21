@@ -32,6 +32,20 @@ typedef struct s_request {
 	char *method;
 } t_request;
 
+typedef struct s_student {
+	char *login;
+	char *first_name;
+	char *url;
+	char *image_url;
+	char *pool_month;
+	char *pool_year;
+	int is_staff;
+	int correction_points;
+	int wallet;
+	char *current_project;
+	int avg_days_project;
+} t_student;
+
 
 void		connection_handler (struct mg_connection *conn, int event,
 				void *event_data, void *data);
@@ -41,5 +55,9 @@ void		free_request(t_request *req);
 void		free_response(t_response *res);
 void 		get_token(t_api *api);
 void 		dump_response(t_response *response);
+t_student	*get_student(const char *json);
+char 		*student_to_json(t_student *student);
+void		free_student(t_student *student);
+
 
 #endif

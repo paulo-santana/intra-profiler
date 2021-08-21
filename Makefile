@@ -13,6 +13,7 @@ MBEDTLS = $(MBEDTLS_DIR)/lib/libmbedtls.a
 SRC_FILES := index.c \
 			 http_client.c \
 			 intra_token_generator.c \
+			 student_json.c \
 			 utils.c
 
 DEPS_FILES = mongoose.c \
@@ -28,7 +29,7 @@ OBJ := $(addprefix $(OBJ_DIR)/, $(OBJ_FILES))
 
 CFLAGS := -Wall -Werror -Wextra -g3 -fsanitize=address
 CFLAGS += -DMG_ENABLE_MBEDTLS=1
-LFLAGS = -L$(MBEDTLS_DIR)/library -lmbedtls -lmbedcrypto -lmbedx509
+LFLAGS = -L$(MBEDTLS_DIR)/library -lmbedtls -lmbedcrypto -lmbedx509 -lm
 CC := gcc $(CFLAGS)
 
 RM := rm -rf
