@@ -1,6 +1,7 @@
 # Processo Seletivo 42 São Paulo: 42Labs
 
 [![Build](https://github.com/42sp/42labs-selection-process-paulo-santana/actions/workflows/build.yml/badge.svg)](https://github.com/42sp/42labs-selection-process-paulo-santana/actions/workflows/build.yml)
+[![Docker Image CI](https://github.com/42sp/42labs-selection-process-paulo-santana/actions/workflows/docker-image.yml/badge.svg)](https://github.com/42sp/42labs-selection-process-paulo-santana/actions/workflows/docker-image.yml)
 
 A sua tarefa é construir uma API com conexão de banco de dados para uma aplicação de análise estatística de alunos. A aplicação deverá receber `Intra login` e retornar o máximo de informações e análises que você julgue como úteis de uma forma legível e de fácil processamento. Essas informações devem ser buscadas através da [API oficial da Intra](https://api.intra.42.fr/), persistidas em um banco de dados e atualizadas após cada nova requisição.
 

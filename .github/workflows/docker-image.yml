@@ -1,4 +1,5 @@
-name: Build
+name: Docker Image CI
+
 on:
   push:
     branches: [ main ]
@@ -6,13 +7,12 @@ on:
     branches: [ main ]
 
 jobs:
+
   build:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: install dependencies
-      run: sudo apt-get install -y libmbedtls-dev
-    - name: make
-      run: make
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag intra-profiler:$(date +%s)
