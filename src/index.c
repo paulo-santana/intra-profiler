@@ -48,8 +48,8 @@ static void handle_request(t_api *api, struct mg_connection *conn, struct mg_htt
 	char url[42];
 
 	int prefix_len = strlen("/api/v1/");
-	if (msg->uri.len <= 5)
-		return (mg_http_reply(conn, 400, "", ""));
+	if (msg->uri.len <= 8 || msg->uri.len > 16)
+		return (mg_http_reply(conn, 404, "", ""));
 	if (strncmp(msg->method.ptr, "GET", 3) == 0)
 	{
 		bzero(username, 9);
