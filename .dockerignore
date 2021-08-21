@@ -1,2 +1,3 @@
 ./dependencies/mbedtls
 .git
+secrets.txt

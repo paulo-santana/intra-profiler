@@ -1,7 +1,7 @@
 #include "mjson.h"
 #include "profiler.h"
 
-static const char *g_listening_address = "http://0.0.0.0:8000";
+static const char *g_listening_address = "http://0.0.0.0:80";
 #define API42 "https://api.intra.42.fr"
 
 static char *manage_student_data(char *raw_data)

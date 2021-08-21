@@ -1,8 +1,14 @@
 FROM debian:buster-slim
 WORKDIR /profiler
 COPY . .
-RUN apt-get update
-RUN apt-get install -y gcc make libmbedtls-dev
-RUN make
-EXPOSE 8000
-CMD [ "/profiler/intra_profiler" ]
+RUN apt-get update; \
+		apt-get install -y \
+		make \
+		gcc \
+		dumb-init \
+		libmongoc-1.0-0 \
+		libmongoc-dev \
+		libmbedtls-dev
+EXPOSE 80
+
+ENTRYPOINT [ "/usr/bin/dumb-init", "make", "run" ]

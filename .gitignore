@@ -5,3 +5,4 @@ mongoose
 .cache
 compile_commands.json
 vgcore*
+secrets.txt

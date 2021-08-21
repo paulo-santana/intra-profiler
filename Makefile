@@ -5,10 +5,10 @@ VALGRIND = #valgrind
 SRC_DIR := ./src
 OBJ_DIR := ./obj
 DEPS_DIR = ./dependencies
-MBEDTLS_DIR = /usr/local
+MONGOC = /usr/include/libmongoc-1.0/
+BSON = /usr/include/libbson-1.0/
 
-INCLUDE_DIR := ./includes #-I$(MBEDTLS_DIR)/include
-MBEDTLS = $(MBEDTLS_DIR)/lib/libmbedtls.a
+INCLUDE_DIR := ./includes -I$(MONGOC) -I$(BSON)
 
 SRC_FILES := index.c \
 			 http_client.c \
@@ -27,9 +27,9 @@ SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJ_FILES := $(SRC_FILES:.c=.o)
 OBJ := $(addprefix $(OBJ_DIR)/, $(OBJ_FILES))
 
-CFLAGS := -Wall -Werror -Wextra -g3 -fsanitize=address
+CFLAGS := -Wall -Werror -Wextra -g3
 CFLAGS += -DMG_ENABLE_MBEDTLS=1
-LFLAGS = -L$(MBEDTLS_DIR)/library -lmbedtls -lmbedcrypto -lmbedx509 -lm
+LFLAGS = -L$(MONGOC)/library -lmbedtls -lmbedcrypto -lmbedx509 -lm
 CC := gcc $(CFLAGS)
 
 RM := rm -rf
@@ -48,11 +48,14 @@ $(OBJ_DIR)/%.o: $(DEPS_DIR)/%.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -I$(INCLUDE_DIR) -c $< -o $@ 
 
-#$(MBEDTLS):
-#	make -C $(MBEDTLS_DIR) no_test
+docker: fclean
+	docker build --tag intra-profiler . 
+	docker rm -f intra-profiler
+	docker run -it -p 80:80 --name intra-profiler --env-file .env \
+		intra-profiler:latest
 
 run: all
-	$(VALGRIND) ./intra_profiler
+	./intra_profiler
 
 clean:
 	$(RM) $(OBJ) $(DEPS_OBJ)
