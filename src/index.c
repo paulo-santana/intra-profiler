@@ -1,7 +1,7 @@
 #include "mjson.h"
 #include "profiler.h"
 
-static const char *g_listening_address = "http://0.0.0.0:80";
+#define LISTENING_ADDRESS "http://0.0.0.0:"
 #define API42 "https://api.intra.42.fr"
 
 static char *manage_student_data(t_api *api, char *raw_data)
@@ -81,13 +81,31 @@ static void callback(struct mg_connection *conn, int ev, void *ev_data, void *ap
 		return mg_http_reply(conn, 404, "", "");
 }
 
+char *get_listening_addr(const char *port)
+{
+	char *addr;
+
+	addr = malloc(100);
+	if (addr == NULL)
+		return (NULL);
+	strncpy(addr, LISTENING_ADDRESS, 94);
+	strncat(addr, port, strlen(addr) + 6);
+	return (addr);
+}
+
 void init_api(t_api *api)
 {
-	api->keep_running = 1;
 	api->token.str = NULL;
 	api->token.expiration_date = 0;
+
+	char *port = getenv("PORT");
+	api->keep_running = 1;
+	if (port == NULL)
+		port = "8000";
+	api->port = port;
+	api->listening_address = get_listening_addr(port);
 	mg_mgr_init(&api->mgr);
-	mg_http_listen(&api->mgr, g_listening_address, callback, api);
+	mg_http_listen(&api->mgr, api->listening_address, callback, api);
 }
 
 void start_server(t_api *api)
@@ -99,6 +117,7 @@ void start_server(t_api *api)
 void close_api(t_api *api)
 {
 	free(api->token.str);
+	free(api->listening_address);
 }
 
 int main(void)

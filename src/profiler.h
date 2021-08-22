@@ -19,6 +19,8 @@ typedef struct s_mongo {
 typedef struct s_api {
 	int				keep_running;
 	struct mg_mgr	mgr;
+	char 			*port;
+	char			*listening_address;
 	t_token 		token;
 	t_mongo 		*mongo;
 } t_api;
