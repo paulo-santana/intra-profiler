@@ -14,6 +14,7 @@ SRC_FILES := index.c \
 			 http_client.c \
 			 intra_token_generator.c \
 			 student_json.c \
+			 database.c \
 			 utils.c
 
 DEPS_FILES = mongoose.c \
@@ -30,6 +31,7 @@ OBJ := $(addprefix $(OBJ_DIR)/, $(OBJ_FILES))
 CFLAGS := -Wall -Werror -Wextra -g3
 CFLAGS += -DMG_ENABLE_MBEDTLS=1
 LFLAGS = -L$(MONGOC)/library -lmbedtls -lmbedcrypto -lmbedx509 -lm
+LFLAGS += -lmongoc-1.0 -lbson-1.0
 CC := gcc $(CFLAGS)
 
 RM := rm -rf
@@ -49,7 +51,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) -I$(INCLUDE_DIR) -c $< -o $@ 
 
 docker: fclean
-	docker build --tag intra-profiler . 
+	docker build -t intra-profiler .
 	docker rm -f intra-profiler
 	docker run -it -p 80:80 --name intra-profiler --env-file .env \
 		intra-profiler:latest

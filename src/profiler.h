@@ -4,16 +4,23 @@
 #include "mongoose.h"
 #define _GNU_SOURCE
 #include <stdio.h>
+#include <mongoc/mongoc.h>
 
 typedef struct s_token {
 	char *str;
 	time_t expiration_date;
 } t_token;
 
+typedef struct s_mongo {
+	mongoc_client_t *client;
+	mongoc_database_t *database;
+} t_mongo;
+
 typedef struct s_api {
 	int				keep_running;
 	struct mg_mgr	mgr;
 	t_token 		token;
+	t_mongo 		*mongo;
 } t_api;
 
 typedef struct s_response {
@@ -33,6 +40,7 @@ typedef struct s_request {
 } t_request;
 
 typedef struct s_student {
+	int intra_id;
 	char *login;
 	char *first_name;
 	char *url;
@@ -58,6 +66,8 @@ void 		dump_response(t_response *response);
 t_student	*get_student(const char *json);
 char 		*student_to_json(t_student *student);
 void		free_student(t_student *student);
-
+int 		save_student(t_mongo *mongo, int id, t_student *student);
+int			init_db(t_mongo *mongo);
+void 		close_db(t_mongo *mongo);
 
 #endif

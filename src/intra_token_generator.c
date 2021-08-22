@@ -43,4 +43,5 @@ void get_token(t_api *api)
 		api->token.str = NULL;
 		api->token.expiration_date = 0;
 	}
+	free_response(response);
 }

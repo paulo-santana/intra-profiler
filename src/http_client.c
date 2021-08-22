@@ -52,7 +52,6 @@ void connection_handler (struct mg_connection *conn, int event,
 		}
 		else if (event == MG_EV_CLOSE)
 			request->finished = 1;
-		printf("event: %d\n", event);
 	}
 }
 

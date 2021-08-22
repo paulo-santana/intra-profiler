@@ -4,14 +4,14 @@
 static const char *g_listening_address = "http://0.0.0.0:80";
 #define API42 "https://api.intra.42.fr"
 
-static char *manage_student_data(char *raw_data)
+static char *manage_student_data(t_api *api, char *raw_data)
 {
 	char *student_json;
 
 	t_student *student = get_student(raw_data);
 	student_json = student_to_json(student);
+	save_student(api->mongo, student->intra_id, student);
 	free_student(student);
-	printf("%s\n", student_json);
 	return (student_json);
 }
 
@@ -31,14 +31,13 @@ void fetch_user(t_api *api, char *url, void* current_connection)
 	t_response *res = request_intra(api, "GET", url, "");
 	if (res->code == 200)
 	{
-		char *result = manage_student_data(res->body);
+		char *result = manage_student_data(api, res->body);
 		mg_http_reply(current_connection, 200,
 				"Content-Type: application/json\r\n", "%s\r\n", result);
 		free(result);
 	}
 	else
-		mg_http_reply(current_connection, res->code,
-				"", "%s\r\n", res->body);
+		mg_http_reply(current_connection, res->code, "", "%s\r\n", res->body);
 	free_response(res);
 }
 
@@ -97,12 +96,26 @@ void start_server(t_api *api)
 		mg_mgr_poll(&api->mgr, 100);
 }
 
+void close_api(t_api *api)
+{
+	free(api->token.str);
+}
+
 int main(void)
 {
 	t_api api;
+	t_mongo mongo;
 
+	if(!init_db(&mongo))
+	{
+		fprintf(stderr, "failed to connect to the database\n");
+		return (0);
+	}
 	init_api(&api);
+	api.mongo = &mongo;
 	start_server(&api);
 	mg_mgr_free(&api.mgr);
+	close_db(&mongo);
+	close_api(&api);
 	return (0);
 }

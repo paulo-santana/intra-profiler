@@ -6,3 +6,4 @@ mongoose
 compile_commands.json
 vgcore*
 secrets.txt
+ca-certificates.crt

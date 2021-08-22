@@ -123,6 +123,7 @@ t_student *get_student(const char *json)
 	student = calloc(1, sizeof(t_student));
 	if (student == NULL)
 		return (NULL);
+	student->intra_id = get_property_int("$.id", json, json_len);
 	student->login = get_property_str("$.login", json, json_len);
 	student->first_name = get_property_str("$.first_name", json, json_len);
 	student->url = get_property_str("$.url", json, json_len);
@@ -155,6 +156,7 @@ char *student_to_json(t_student *student)
 
 	json = mjson_aprintf(
 			"{"
+				"%Q:%d,"
 				"%Q:%s,"
 				"%Q:%s,"
 				"%Q:%s,"
@@ -167,6 +169,7 @@ char *student_to_json(t_student *student)
 				"%Q:%s,"
 				"%Q:%d"
 			"}",
+			"intra_id", student->intra_id,
 			"login", student->login,
 			"first_name", student->first_name,
 			"url", student->url,

@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM ubuntu:focal
 WORKDIR /profiler
 COPY . .
 RUN apt-get update; \
