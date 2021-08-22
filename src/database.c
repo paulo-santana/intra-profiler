@@ -64,9 +64,9 @@ void insert_student(t_mongo *mongo, t_student *student)
 int student_exists(t_mongo *mongo, int intra_id, bson_oid_t *oid)
 {
 	int exists = 0;
-	const bson_t *doc;
 	mongoc_collection_t *collection;
 	mongoc_cursor_t *cursor;
+	const bson_t *student;
 	bson_t *query;
 
 	query = bson_new();
@@ -74,10 +74,10 @@ int student_exists(t_mongo *mongo, int intra_id, bson_oid_t *oid)
 
 	collection = get_collection(mongo);
 	cursor = mongoc_collection_find_with_opts(collection, query, NULL, NULL);
-	if(mongoc_cursor_next(cursor, &doc))
+	if(mongoc_cursor_next(cursor, &student))
 	{
 		bson_iter_t iter;
-		bson_iter_init(&iter, doc);
+		bson_iter_init(&iter, student);
 		while (bson_iter_next(&iter))
 			if (BSON_ITER_HOLDS_OID(&iter))
 				bson_oid_copy(bson_iter_oid(&iter), oid);

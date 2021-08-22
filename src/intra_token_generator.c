@@ -9,7 +9,7 @@ void get_token(t_api *api)
 {
 	if (api->token.str != NULL && api->token.expiration_date > time(NULL))
 		return ;
-	char *client_id = "87cbc2db2e4d3605e36af49df3b34b8311500fb8f106307569abd91122a32276";
+	char *client_id = getenv("INTRA_CLIENT_ID");
 	char *client_secret = getenv("INTRA_SECRET");
 	char *auth_url = "https://api.intra.42.fr/oauth/token";
 
