@@ -1,51 +1,83 @@
-# Processo Seletivo 42 São Paulo: 42Labs
+# 42 Intra profiler
 
 [![Build](https://github.com/42sp/42labs-selection-process-paulo-santana/actions/workflows/build.yml/badge.svg)](https://github.com/42sp/42labs-selection-process-paulo-santana/actions/workflows/build.yml)
 [![Docker Image CI](https://github.com/42sp/42labs-selection-process-paulo-santana/actions/workflows/docker-image.yml/badge.svg)](https://github.com/42sp/42labs-selection-process-paulo-santana/actions/workflows/docker-image.yml)
 
-A sua tarefa é construir uma API com conexão de banco de dados para uma aplicação de análise estatística de alunos. A aplicação deverá receber `Intra login` e retornar o máximo de informações e análises que você julgue como úteis de uma forma legível e de fácil processamento. Essas informações devem ser buscadas através da [API oficial da Intra](https://api.intra.42.fr/), persistidas em um banco de dados e atualizadas após cada nova requisição.
+Esta é a minha solução do desafio 42 Labs: uma API REST escrita em C :).
 
-Os dados devem ser mantidos e utilizados para gerar análises de performance dos alunos. Exemplos: projetos concluídos, tempo gasto por projeto, etc.
+## Utilização
 
-**A aplicação deverá ser construída utilizando C.**
+### rota `/api/v1/{login}`
 
-Quaisquer banco de dados, bibliotecas e ferramentas são permitidas. 
+Procura por dados do usuário identificado pelo camop `{login}` na Intranet
+da 42 e retorna informações relevantes conforme o JSON abaixo:
 
-## **O que será avaliado**
+```json
+{
+  "intra_id": 86667,
+  "login": "psergio-",
+  "first_name": "Paulo",
+  "url": "https://api.intra.42.fr/v2/users/psergio-",
+  "image_url": "https://cdn.intra.42.fr/users/default.png",
+  "pool_month": "march",
+  "pool_year": "2021",
+  "correction_points": 7,
+  "wallet": 178,
+  "is_staff": false,
+  "current_project": "so_long",
+  "avg_days_project": 21
+}
+```
 
-Queremos avaliar sua capacidade de desenvolver e documentar um back-end para uma aplicação. Serão avaliados:
+## Instalação
 
-- Código bem escrito e limpo;
-- Quais ferramentas foram usadas, como e por quê;
-- Sua criatividade e capacidade de lidar com problemas diferentes e abstratos;
-- Sua capacidade de se comprometer com o que foi fornecido;
-- Sua capacidade de documentação da sua aplicação.
+### Compilando os fontes
 
-## **O mínimo necessário**
+Para compilar o código fonte da API, você precisa instalar as seguintes
+dependências:
 
-- [README.md](http://readme.md) com documentação contendo informações do projeto;
+- GCC
+- Make
+- libmbedtls
+- libmongoc
+- libbson
 
-## **Bônus**
+As dependências podem ser instaladas com o seguinte comando em um Ubuntu (Focal):
+```shell
+$ sudo apt update && sudo apt install gcc make libmongoc-1.0-0 libmongoc-dev libmbedtls-dev
+```
 
-Os seguintes itens não são obrigatórios, mas darão mais valor ao seu trabalho. Os destacados são mais significativos para nós.
+Com as dependências instaladas, entre no diretório do projeto e execute
+```shell
+$ make
+```
+para compilar o projeto.
 
-- **Testes**;
-- **Conteinerização da aplicação**;
-- **Autenticação e autorização** (**OAuth, JWT**);
-- Uso de ferramentas externas que facilitem o seu trabalho (Miro, Trello, etc.);
-- Cuidados especiais com otimização, padrões, entre outros;
-- Migrations ou script para configuração do banco de dados;
-- CronJobs;
-- Rota para plotagem de gráficos;
-- Manifestos K8s;
-- Pipelines de CI;
-- Utilização de algum serviço de computação na nuvem (AWS, GCP, Azure, etc.);
+### Iniciando o servidor
 
-## **Critérios de Aceitação**
+O servidor da API pode ser executado diretamente pelo seu binário ou através da
+regra `run` do Makefile
 
-- Você deverá utilizar a API oficial da intra: [api.intra.42.fr](https://api.intra.42.fr/)
-- Deve haver uma documentação descrevendo sua API;
+```shell
+$ ./intra_profiler
+# ou
+$ make run
+```
 
-## **Formato de entrega**
+O servidor utiliza credenciais em variáveis de ambiente para acessar a intranet
+da 42 e o servidor de banco de dados. Essas variáveis estão listadas no arquivo
+.env.example
 
-Seu código deverá ser submetido neste repositório, sinta-se livre pare substituir este README.md com o seu próprio.
+> Dica: Você pode atribuir a uma variável de ambiente `$PORT` um número de
+porta em que a API ficará escutando
+
+### Docker
+
+Para utilizar o docker, utilize a regra `docker` do Makefile
+
+```shell
+$ make docker
+```
+
+Isto irá gerar uma imagem chamada `intra-profiler` e instanciará um container
+a partir dessa imagem, com o mesmo nome.
