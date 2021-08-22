@@ -7,7 +7,7 @@ Esta é a minha solução do desafio 42 Labs: uma API REST escrita em C :).
 
 ## Utilização
 
-### rota `/api/v1/{login}`
+### GET `/api/v1/{login}`
 
 Procura por dados do usuário identificado pelo camop `{login}` na Intranet
 da 42 e retorna informações relevantes conforme o JSON abaixo:
@@ -25,7 +25,7 @@ da 42 e retorna informações relevantes conforme o JSON abaixo:
   "wallet": 178,
   "is_staff": false,
   "current_project": "so_long",
-  "avg_days_project": 21
+  "avg_days_project": 21 // media de dias por projeto
 }
 ```
 
