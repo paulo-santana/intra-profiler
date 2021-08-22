@@ -8,10 +8,7 @@
 void get_token(t_api *api)
 {
 	if (api->token.str != NULL && api->token.expiration_date > time(NULL))
-	{
-		printf("no need to request a token :)\n");
 		return ;
-	}
 	char *client_id = "87cbc2db2e4d3605e36af49df3b34b8311500fb8f106307569abd91122a32276";
 	char *client_secret = getenv("INTRA_SECRET");
 	char *auth_url = "https://api.intra.42.fr/oauth/token";
@@ -24,7 +21,6 @@ void get_token(t_api *api)
 			"client_secret=%s",
 			client_id, client_secret);
 	t_response *response = request_intra(api, "POST", auth_url, data);
-	dump_response(response);
 	if (response->code == 200)
 	{
 		double expires_in;

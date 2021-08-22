@@ -68,7 +68,6 @@ int student_exists(t_mongo *mongo, int intra_id, bson_oid_t *oid)
 	mongoc_collection_t *collection;
 	mongoc_cursor_t *cursor;
 	bson_t *query;
-	char str[100];
 
 	query = bson_new();
 	BSON_APPEND_INT32 (query, "intra_id", intra_id);
@@ -80,22 +79,14 @@ int student_exists(t_mongo *mongo, int intra_id, bson_oid_t *oid)
 		bson_iter_t iter;
 		bson_iter_init(&iter, doc);
 		while (bson_iter_next(&iter))
-		{
 			if (BSON_ITER_HOLDS_OID(&iter))
-			{
-				const bson_oid_t *useroid = bson_iter_oid(&iter);
-				bson_oid_copy(useroid, oid);
-				bson_oid_to_string(oid, str);
-				printf("oid: %s\n", str);
-			}
-		}
+				bson_oid_copy(bson_iter_oid(&iter), oid);
 		exists = 1;
 	}
 	mongoc_collection_destroy(collection);
 	bson_destroy(query);
 	mongoc_cursor_destroy(cursor);
 	return (exists);
-	(void)oid;
 }
 
 static int update_student(t_mongo *mongo, bson_oid_t *oid, t_student *student)
@@ -115,21 +106,19 @@ static int update_student(t_mongo *mongo, bson_oid_t *oid, t_student *student)
 		fprintf(stderr, "failed to generate document for update\n%s", error.message);
 		success = 0;
 	}
-
-	bson_init(&update);
-	bson_append_document(&update, "$set", 4, new_data);
-	query = BCON_NEW("_id", BCON_OID(oid));
-	collection = get_collection(mongo);
-
-	if (!mongoc_collection_update_one(
-				collection, query, &update, NULL, NULL, &error))
-	{
-		fprintf(stderr, "failed to update: %s\n", error.message);
-		success = 0;
-	}
 	else
 	{
-		printf("updatou :)\n");
+		bson_init(&update);
+		bson_append_document(&update, "$set", 4, new_data);
+		query = BCON_NEW("_id", BCON_OID(oid));
+		collection = get_collection(mongo);
+
+		if (!mongoc_collection_update_one(
+					collection, query, &update, NULL, NULL, &error))
+		{
+			fprintf(stderr, "failed to update: %s\n", error.message);
+			success = 0;
+		}
 	}
 	bson_destroy(query);
 	bson_destroy(new_data);
