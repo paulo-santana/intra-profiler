@@ -14,8 +14,7 @@ SRC_FILES := index.c \
 			 http_client.c \
 			 intra_token_generator.c \
 			 student_json.c \
-			 database.c \
-			 utils.c
+			 database.c
 
 DEPS_FILES = mongoose.c \
 			 mjson.c
