@@ -52,7 +52,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 docker: fclean
 	docker build -t intra-profiler .
 	docker rm -f intra-profiler
-	docker run -it -p 80:80 --name intra-profiler --env-file .env \
+	docker run -it -p 80:80 --restart always --name intra-profiler --env-file .env \
 		intra-profiler:latest
 
 run: all
