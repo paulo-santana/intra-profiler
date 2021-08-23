@@ -9,7 +9,7 @@ Esta é a minha solução do desafio 42 Labs: uma API REST escrita em C :).
 
 ### GET `/api/v1/{login}`
 
-Procura por dados do usuário identificado pelo camop `{login}` na Intranet
+Procura por dados do usuário identificado pelo campo `{login}` na Intranet
 da 42 e retorna informações relevantes conforme o JSON abaixo:
 
 ```json
